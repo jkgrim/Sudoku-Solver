@@ -1,35 +1,60 @@
 import { useState } from "react";
 import "./App.css";
 
+// const puzzle = [
+//   [-1, 5, -1, 9, -1, -1, -1, -1, -1],
+//   [8, -1, -1, -1, 4, -1, 3, -1, 7],
+//   [-1, -1, -1, 2, 8, -1, 1, 9, -1],
+//   [5, 3, 8, 6, -1, 7, 9, 4, -1],
+//   [-1, 2, -1, 3, -1, 1, -1, -1, -1],
+//   [1, -1, 9, 8, -1, 4, 6, 2, 3],
+//   [9, -1, 7, 4, -1, -1, -1, -1, -1],
+//   [-1, 4, 5, -1, -1, -1, 2, -1, 9],
+//   [-1, -1, -1, -1, 3, -1, -1, 7, -1],
+// ];
+
 const puzzle = [
-  [-1, 5, -1, 9, -1, -1, -1, -1, -1],
-  [8, -1, -1, -1, 4, -1, 3, -1, 7],
-  [-1, -1, -1, 2, 8, -1, 1, 9, -1],
-  [5, 3, 8, 6, -1, 7, 9, 4, -1],
-  [-1, 2, -1, 3, -1, 1, -1, -1, -1],
-  [1, -1, 9, 8, -1, 4, 6, 2, 3],
-  [9, -1, 7, 4, -1, -1, -1, -1, -1],
-  [-1, 4, 5, -1, -1, -1, 2, -1, 9],
-  [-1, -1, -1, -1, 3, -1, -1, 7, -1],
+  [1, -1, -1, -1, -1, 2, -1, -1, -1],
+  [-1, -1, 3, -1, -1, 4, -1, 5, -1],
+  [-1, -1, -1, -1, 8, -1, 3, -1, 9],
+  [-1, 2, 8, -1, 4, -1, -1, -1, -1],
+  [9, 7, -1, -1, 5, -1, 2, -1, -1],
+  [-1, -1, -1, -1, -1, -1, 4, 6, -1],
+  [-1, 6, -1, 7, 3, -1, -1, 9, -1],
+  [-1, -1, -1, -1, -1, -1, -1, -1, 8],
+  [-1, -1, -1, -1, -1, -1, -1, -1, -1],
 ];
 
 function App() {
+  // const [testPuzzle, setTestPuzzle] = useState([]);
   const [sudokuArr, setSudokuArr] = useState(getDeepCopy(puzzle));
+
+  // useEffect(() => {
+  //   createPuzzle();
+  // }, []);
+
+  // const createPuzzle = () => {
+  //   let testPuzzle = [];
+  //   for (let i = 0; i < 9; i++) {
+  //     testPuzzle[i] = Array(9).fill(-1);
+  //   }
+  //   setTestPuzzle(testPuzzle);
+  // };
 
   function getDeepCopy(arr) {
     return JSON.parse(JSON.stringify(arr));
   }
 
-  function onInputChange(e, row, col) {
+  const onInputChange = (e, row, col) => {
     const val = parseInt(e.target.value) || -1,
       grid = getDeepCopy(sudokuArr);
     if (val === -1 || (val >= 1 && val <= 9)) {
       grid[row][col] = val;
     }
     setSudokuArr(grid);
-  }
+  };
 
-  function compareSudokus(currentSudoku, solvedSudoku) {
+  const compareSudokus = (currentSudoku, solvedSudoku) => {
     let res = {
       isComplete: true,
       isSolvable: true,
@@ -45,9 +70,9 @@ function App() {
       }
     }
     return res;
-  }
+  };
 
-  function checkSudoku() {
+  const checkSudoku = () => {
     let sudoku = getDeepCopy(puzzle);
     solver(sudoku);
     let compare = compareSudokus(sudokuArr, sudoku);
@@ -58,17 +83,17 @@ function App() {
     } else {
       alert("You've messed up somewhere... Try something else...");
     }
-  }
+  };
 
-  function checkRow(grid, row, num) {
+  const checkRow = (grid, row, num) => {
     return grid[row].indexOf(num) === -1;
-  }
+  };
 
-  function checkCol(grid, col, num) {
+  const checkCol = (grid, col, num) => {
     return grid.map((row) => row[col]).indexOf(num) === -1;
-  }
+  };
 
-  function checkBox(grid, row, col, num) {
+  const checkBox = (grid, row, col, num) => {
     let boxArr = [],
       rowStart = row - (row % 3),
       colStart = col - (col % 3);
@@ -79,9 +104,9 @@ function App() {
     }
 
     return boxArr.indexOf(num) === -1;
-  }
+  };
 
-  function checkValid(grid, row, col, num) {
+  const checkValid = (grid, row, col, num) => {
     if (
       checkRow(grid, row, num) &&
       checkCol(grid, col, num) &&
@@ -90,13 +115,13 @@ function App() {
       return true;
     }
     return false;
-  }
+  };
 
-  function getNext(row, col) {
+  const getNext = (row, col) => {
     return col !== 8 ? [row, col + 1] : row !== 8 ? [row + 1, 0] : [0, 0];
-  }
+  };
 
-  function solver(grid, row = 0, col = 0) {
+  const solver = (grid, row = 0, col = 0) => {
     if (grid[row][col] !== -1) {
       let isLast = row >= 8 && col >= 8;
       if (!isLast) {
@@ -123,18 +148,18 @@ function App() {
 
     grid[row][col] = -1;
     return false;
-  }
+  };
 
-  function solveSudoku() {
+  const solveSudoku = () => {
     let sudoku = getDeepCopy(puzzle);
     solver(sudoku);
     setSudokuArr(sudoku);
-  }
+  };
 
-  function resetSudoku() {
+  const resetSudoku = () => {
     let sudoku = getDeepCopy(puzzle);
     setSudokuArr(sudoku);
-  }
+  };
 
   return (
     <div className="App">
