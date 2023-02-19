@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 // const puzzle = [
@@ -25,25 +25,24 @@ const puzzle = [
   [-1, -1, -1, -1, -1, -1, -1, -1, -1],
 ];
 
+const getDeepCopy = (arr) => JSON.parse(JSON.stringify(arr));
+
 function App() {
-  // const [testPuzzle, setTestPuzzle] = useState([]);
+  const [testPuzzle, setTestPuzzle] = useState([]);
   const [sudokuArr, setSudokuArr] = useState(getDeepCopy(puzzle));
+  const MAX_NUMBER = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-  // useEffect(() => {
-  //   createPuzzle();
-  // }, []);
+  useEffect(() => {
+    console.log(testPuzzle, puzzle);
+  }, [testPuzzle]);
 
-  // const createPuzzle = () => {
-  //   let testPuzzle = [];
-  //   for (let i = 0; i < 9; i++) {
-  //     testPuzzle[i] = Array(9).fill(-1);
-  //   }
-  //   setTestPuzzle(testPuzzle);
-  // };
-
-  function getDeepCopy(arr) {
-    return JSON.parse(JSON.stringify(arr));
-  }
+  const createPuzzle = () => {
+    let newPuzzle = [];
+    for (let i = 0; i < 9; i++) {
+      newPuzzle[i] = Array(9).fill(-1);
+    }
+    setTestPuzzle(newPuzzle);
+  };
 
   const onInputChange = (e, row, col) => {
     const val = parseInt(e.target.value) || -1,
@@ -167,13 +166,13 @@ function App() {
         <h1>Sudoku Solver</h1>
         <table>
           <tbody>
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((row, rIndex) => {
+            {MAX_NUMBER.map((row, rIndex) => {
               return (
                 <tr
                   key={rIndex}
                   className={(row + 1) % 3 === 0 ? "bBorder" : ""}
                 >
-                  {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((col, cIndex) => {
+                  {MAX_NUMBER.map((col, cIndex) => {
                     return (
                       <td
                         key={rIndex + cIndex}
